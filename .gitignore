@@ -1,0 +1,11 @@
+local_mount/*
+!local_mount/local_mount_ok
+/.catkin_tools/
+/build_debug/
+/devel_debug/
+/logs_debug/
+/build_release/
+/devel_release/
+/logs_release/
+/local_mount/
+.env
