@@ -1,0 +1,40 @@
+{
+    "name": "ROS1-Noetic Development Container",
+    "init": true,
+    "privileged": true,
+    "remoteUser": "ubuntu",
+    "service": "ros1",
+    "dockerComposeFile": [
+        "../docker_compose.yaml"
+    ],
+    "workspaceFolder": "/home/ubuntu",
+    "customizations": {
+        "vscode": {
+            "extensions":[
+                "ms-vscode.cpptools",
+                "ms-vscode.cpptools-themes",
+                "twxs.cmake",
+                "donjayamanne.python-extension-pack",
+                "eamodio.gitlens",
+                "ms-iot.vscode-ros"
+            ],
+            "settings": {
+                "terminal.integrated.profiles.linux": {
+                    "bash": {
+                        "path": "/usr/bin/bash",
+                        "icon": "terminal-bash"
+                    }
+                },
+                "terminal.integrated.defaultProfile.linux": "bash"
+            }
+        }
+    },
+    "containerEnv": {
+        "DISPLAY": "unix:0",
+        "ROS_LOCALHOST_ONLY": "1",
+        "ROS_DOMAIN_ID": "42"
+    },
+    "initializeCommand": ".devcontainer/initialize.sh", // runs on the host machine before the container is created
+    "onCreateCommand": "/onCreate.sh", // runs after the container is built. It is executed inside the container, not on the host machine
+    "postCreateCommand": "/postCreate.sh" // runs once the dev container has been assigned to a user for the first time
+}

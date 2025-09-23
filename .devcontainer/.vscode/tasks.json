@@ -1,0 +1,71 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "catkin_make",
+            "type": "shell",
+            "command": "bash -i -c catkin_make",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "fileLocation": "absolute",
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        },
+        {
+            "label": "catkin_create_pkg",
+            "type": "shell",
+            "command": "bash -i -c 'cd src && catkin_create_pkg ${input:packageName} ${input:dependingPackages}'"
+        },
+        {
+            "label": "xserver",
+            "type": "shell",
+            "command": "echo",
+            "args": [
+                "Please open http://localhost:3000/ using your favorite browser.\n(If you are using Docker Toolbox, open http://192.168.99.100:3000/ instead)"
+            ]
+        },
+        {
+            "label": "roscore",
+            "type": "shell",
+            "command": "bash -i -c roscore",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "rviz",
+            "type": "shell",
+            "command": "bash -i -c 'rosrun rviz rviz'",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "packageName",
+            "type": "promptString",
+            "description": "Please enter the name of new package"
+        },
+        {
+            "id": "dependingPackages",
+            "type": "promptString",
+            "description": "Please enter name of depending packages",
+            "default": "roscpp std_msgs"
+        }
+    ]
+}

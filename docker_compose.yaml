@@ -1,0 +1,30 @@
+services:
+  ros1:
+    container_name: ros1_noetic_devel
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    privileged: true
+    # mac_address: 51:91:f3:26:c8:36      # <-- MAC needs to be unique in this network (gerated randomly)
+    # networks:
+    #   macvlan_ros1:                        # <-- MACVlan Name no need to change, but it needs to be unique
+    #     ipv4_address: 192.168.1.111       # <-- Update; must be the IP that you want to use as for the container
+    environment:
+      - DISPLAY=$DISPLAY
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - ROS_MASTER_URI=http://simulator:11311/
+    volumes:
+      - type: bind
+        source: ${localWorkspaceFolder}/local_mount
+        target: /home/ubuntu/ros_ws
+
+# networks:
+#   macvlan_ros1:
+#     driver: macvlan
+#     driver_opts:
+#       parent: eth0                           # <- Update to match your NIC
+#     ipam:
+#       config:
+#         - subnet: 192.168.1.0/24            # <-- Update
+#           gateway: 192.168.1.1              # <-- Update
+#           ip_range: 192.168.1.0/24          # <-- Update
