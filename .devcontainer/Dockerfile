@@ -12,7 +12,7 @@ ENV ROS_DISTRO=noetic
 
 # Create the user
 RUN groupadd --gid $USER_GID $USERNAME \
-    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /usr/bin/bash \
     && apt-get update \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
@@ -184,11 +184,35 @@ RUN chmod +x /onCreate.sh
 COPY .devcontainer/postCreate.sh /postCreate.sh
 RUN chmod +x /postCreate.sh
 
+# prepare VNC
+RUN mkdir -p "/home/ubuntu/.vnc"
+RUN echo "$PASSWD" | vncpasswd -f > "/home/ubuntu/.vnc/passwd"
+RUN chmod 600 "/home/ubuntu/.vnc/passwd"
+
+COPY .devcontainer/vnc/vnc_run.sh /home/ubuntu/.vnc/
+RUN chmod +x /home/ubuntu/.vnc/vnc_run.sh
+
+COPY .devcontainer/vnc/xstartup /home/ubuntu/.vnc/
+RUN chmod +x /home/ubuntu/.vnc/xstartup
+
+RUN chown -R "$USERNAME:$USERNAME" "/home/ubuntu"
+RUN sed -i "s/password = WebUtil.getConfigVar('password');/password = '$PASSWD'/" /usr/lib/novnc/app/ui.js
+
+# # Disable IPv6 within the container
+# RUN echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.conf && \
+#     echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf && \
+#     echo "net.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf && \
+#     sysctl -p
+
+RUN echo "blacklist ipv6" >> /etc/modprobe.d/blacklist.conf
+
 # install code plugins using the default user
 USER $USERNAME
-RUN code --install-extension ms-python.python && \
-    code --install-extension ms-vscode.cpptools-extension-pack && \
-    code --install-extension redhat.vscode-xml
+
+# disable temporarily due to the lack of cache in this command
+# RUN code --install-extension ms-python.python && \
+#     code --install-extension ms-vscode.cpptools-extension-pack && \
+#     code --install-extension redhat.vscode-xml
 
 RUN rosdep update
     

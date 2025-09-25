@@ -4,23 +4,35 @@ services:
     build:
       context: .
       dockerfile: .devcontainer/Dockerfile
+    # sysctls:
+    #   - net.ipv6.conf.all.disable_ipv6=1
     privileged: true
-    # mac_address: 51:91:f3:26:c8:36      # <-- MAC needs to be unique in this network (gerated randomly)
-    # networks:
-    #   macvlan_ros1:                        # <-- MACVlan Name no need to change, but it needs to be unique
-    #     ipv4_address: 192.168.1.111       # <-- Update; must be the IP that you want to use as for the container
     environment:
       - DISPLAY=$DISPLAY
       - NVIDIA_DRIVER_CAPABILITIES=all
       - ROS_MASTER_URI=http://simulator:11311/
+    ports:
+      - "3022:22" # sshd
+      - "3080:80" # novnc
+      - "3081:3000" # vscode-server
     volumes:
       - type: bind
         source: ${localWorkspaceFolder}/local_mount
         target: /home/ubuntu/ros_ws
+    
+    # mac configuration
+    # network_mode: "host"
+
+    # linux configuration
+    # mac_address: 51:91:f3:26:c8:36      # <-- MAC needs to be unique in this network (gerated randomly)
+    # networks:
+    #   macvlan_ros1:                        # <-- MACVlan Name no need to change, but it needs to be unique
+    #     ipv4_address: 192.168.1.111       # <-- Update; must be the IP that you want to use as for the container
 
 # networks:
-#   macvlan_ros1:
+#   ros_network:
 #     driver: macvlan
+#     ipv6: false
 #     driver_opts:
 #       parent: eth0                           # <- Update to match your NIC
 #     ipam:

@@ -11,6 +11,10 @@
         "*.sdf": "xml",
         "*.world": "xml"
     },
+    // ignore hidden files in the vscode file editor
+    "files.exclude": {
+        "**/.*": true
+    },
     "xml.fileAssociations": [
         {
             "systemId": "/opt/xsd/package.xml/package_format2.xsd",

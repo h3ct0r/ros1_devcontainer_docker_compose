@@ -1,4 +1,6 @@
 #!/bin/bash -i
+# script to create automatic environment variables such as `localWorkspaceFolder` 
+# used for the docker compose mount configuration
 
 ENV_FILEPATH=".env"
 
