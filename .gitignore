@@ -9,3 +9,4 @@ local_mount/*
 /logs_release/
 /local_mount/
 .env
+.DS_Store
