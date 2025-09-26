@@ -155,7 +155,6 @@ RUN lesspipe >> ~/.bashrc && \
 # global vscode config
 ADD .devcontainer/.vscode /home/ubuntu/.vscode
 RUN ln -s /home/ubuntu/.vscode /home/ubuntu/.vscode-server
-ADD .devcontainer/compile_flags.txt /home/ubuntu/compile_flags.txt
 RUN sudo chown -R ubuntu:ubuntu /home/ubuntu
 
 # Source ROS environment automatically
@@ -171,11 +170,13 @@ RUN rm -rf /var/lib/apt/lists/*
 # Enable apt-get completion after running `apt-get update` in the container
 RUN rm /etc/apt/apt.conf.d/docker-clean
 
-COPY .devcontainer/supervisord_configs/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY .devcontainer/supervisord_configs/custom_programs.conf /etc/supervisor/conf.d/custom_programs.conf
-COPY .devcontainer/supervisord_configs/code_server.conf /etc/supervisor/conf.d/code_server.conf
+COPY configs/supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY configs/supervisord/custom_programs.conf /etc/supervisor/conf.d/custom_programs.conf
+COPY configs/supervisord/code_server.conf /etc/supervisor/conf.d/code_server.conf
 
-COPY .devcontainer/entrypoint.sh /entrypoint.sh
+COPY configs/xfce4_defaults /usr/share/xfwm4/defaults
+
+COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 COPY .devcontainer/onCreate.sh /onCreate.sh
@@ -189,25 +190,28 @@ RUN mkdir -p "/home/ubuntu/.vnc"
 RUN echo "$PASSWD" | vncpasswd -f > "/home/ubuntu/.vnc/passwd"
 RUN chmod 600 "/home/ubuntu/.vnc/passwd"
 
-COPY .devcontainer/vnc/vnc_run.sh /home/ubuntu/.vnc/
+COPY configs/vnc/vnc_run.sh /home/ubuntu/.vnc/
 RUN chmod +x /home/ubuntu/.vnc/vnc_run.sh
 
-COPY .devcontainer/vnc/xstartup /home/ubuntu/.vnc/
+COPY configs/vnc/xstartup /home/ubuntu/.vnc/
 RUN chmod +x /home/ubuntu/.vnc/xstartup
+
+COPY configs/ros_file_templates /home/ubuntu/ros_file_templates
 
 RUN chown -R "$USERNAME:$USERNAME" "/home/ubuntu"
 RUN sed -i "s/password = WebUtil.getConfigVar('password');/password = '$PASSWD'/" /usr/lib/novnc/app/ui.js
 
-# # Disable IPv6 within the container
-# RUN echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.conf && \
-#     echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf && \
-#     echo "net.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf && \
-#     sysctl -p
+# Disable IPv6 within the container
+RUN echo "blacklist ipv6" >> /etc/modprobe.d/blacklist.conf && \
+    echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.conf && \
+    echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf && \
+    echo "net.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf && \
+    sysctl -p
 
-RUN echo "blacklist ipv6" >> /etc/modprobe.d/blacklist.conf
-
-# install code plugins using the default user
+# install code plugins and rosdep dependencies using the default user
 USER $USERNAME
+
+# TODO: add the git clone command of your repo here
 
 # disable temporarily due to the lack of cache in this command
 # RUN code --install-extension ms-python.python && \

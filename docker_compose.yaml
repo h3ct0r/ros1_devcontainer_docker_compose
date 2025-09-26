@@ -3,9 +3,9 @@ services:
     container_name: ros1_noetic_devel
     build:
       context: .
-      dockerfile: .devcontainer/Dockerfile
-    # sysctls:
-    #   - net.ipv6.conf.all.disable_ipv6=1
+      dockerfile: Dockerfile
+    ipc: host
+    pid: host
     privileged: true
     environment:
       - DISPLAY=$DISPLAY
@@ -16,13 +16,11 @@ services:
       - "3080:80" # novnc
       - "3081:3000" # vscode-server
     volumes:
-      - type: bind
-        source: ${localWorkspaceFolder}/local_mount
-        target: /home/ubuntu/ros_ws
-    
-    # mac configuration
-    # network_mode: "host"
-
+      - ${localWorkspaceFolder}/local_mount:/home/ubuntu/ros_ws
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      # - /tmp/.X11-unix:/tmp/.X11-unix
+      # - ${HOME}/.Xauthority:/home/ubuntu/.Xauthority
     # linux configuration
     # mac_address: 51:91:f3:26:c8:36      # <-- MAC needs to be unique in this network (gerated randomly)
     # networks:

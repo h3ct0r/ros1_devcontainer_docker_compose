@@ -30,7 +30,8 @@
         }
     },
     "containerEnv": {
-        "DISPLAY": "unix:0",
+        "QT_X11_NO_MITSHM": "1",
+        "DISPLAY": "${localEnv:DISPLAY}",
         "ROS_LOCALHOST_ONLY": "1",
         "ROS_DOMAIN_ID": "42"
     },
