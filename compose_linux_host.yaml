@@ -15,6 +15,8 @@ services:
       - "3022:22" # sshd
       - "3080:80" # novnc
       - "3081:3000" # vscode-server
+    extra_hosts:
+      - "simulator:127.0.0.1" # fix rviz hostname
     volumes:
       - ${localWorkspaceFolder}/local_mount:/home/ubuntu/ros_ws
       - /etc/localtime:/etc/localtime:ro

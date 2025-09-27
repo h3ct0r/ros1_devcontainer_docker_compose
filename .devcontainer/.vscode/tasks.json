@@ -4,8 +4,22 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "VNCbrowser",
+            "command": "${input:openSimpleBrowserVNC}",
+            "problemMatcher": [],
+            "presentation": {
+                "echo": false,  // silence "Executing task ..."
+                "focus": true,
+                "reveal": "always",
+                "panel": "new"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
+        },
+        {
             "type": "process",
-            "label": "terminal",
+            "label": "initial_bash_term_1",
             "command": "/bin/bash",  // <-- your shell here
             "args": [
                 "-l"  // login shell for bash
@@ -13,8 +27,8 @@
             "problemMatcher": [],
             "presentation": {
                 "echo": false,  // silence "Executing task ..."
-                "focus": true,
-                "group": "build",  // some arbitrary name for the group
+                "focus": false,
+                "group": "initial_bash_term",  // some arbitrary name for the group
                 "panel": "dedicated"
             },
             "runOptions": {
@@ -22,37 +36,22 @@
             }
         },
         {
-            "label": "catkin_make",
-            "type": "shell",
-            "command": "bash -i -c catkin_make",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": {
-                "fileLocation": "absolute",
-                "pattern": {
-                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                    "file": 1,
-                    "line": 2,
-                    "column": 3,
-                    "severity": 4,
-                    "message": 5
-                }
-            }
-        },
-        {
-            "label": "catkin_create_pkg",
-            "type": "shell",
-            "command": "bash -i -c 'cd src && catkin_create_pkg ${input:packageName} ${input:dependingPackages}'"
-        },
-        {
-            "label": "xserver",
-            "type": "shell",
-            "command": "echo",
+            "type": "process",
+            "label": "initial_bash_term_2",
+            "command": "/bin/bash",  // <-- your shell here
             "args": [
-                "Please open http://localhost:3000/ using your favorite browser.\n(If you are using Docker Toolbox, open http://192.168.99.100:3000/ instead)"
-            ]
+                "-l"  // login shell for bash
+            ],
+            "problemMatcher": [],
+            "presentation": {
+                "echo": false,  // silence "Executing task ..."
+                "focus": false,
+                "group": "initial_bash_term",  // some arbitrary name for the group
+                "panel": "dedicated"
+            },
+            "runOptions": {
+                "runOn": "folderOpen"
+            }
         },
         {
             "label": "roscore",
@@ -84,6 +83,14 @@
             "type": "promptString",
             "description": "Please enter name of depending packages",
             "default": "roscpp std_msgs"
+        },
+        {
+            "id": "openSimpleBrowserVNC",
+            "type": "command",
+            "command": "simpleBrowser.show",
+            "args": [
+                "http://localhost:3080/"
+            ]
         }
     ]
 }

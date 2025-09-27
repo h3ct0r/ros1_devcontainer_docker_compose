@@ -1,10 +1,16 @@
 #!/bin/bash -i
-# script to create automatic environment variables such as `localWorkspaceFolder` 
-# used for the docker compose mount configuration
-# and setup the xhost permissions
 
-# run cmd and ignore any errors (MacOS does not have native X server, for example)
+# IMPORTANT: ---------------------------------------------------------- #
+# This script is executed on the HOST machine before calling any        #
+# Docker/docker-compose commands and on every recreation                #
+# --------------------------------------------------------------------- #
+
+# The `|| true` command allows to ignore any errors (MacOS does not have native X server, for example)
 xhost +local || true
+echo "[initializeCommand] xhost +local"
+
+# Create automatic environment variables such as `localWorkspaceFolder` 
+# used for the docker compose mount configuration
 
 ENV_FILEPATH=".env"
 

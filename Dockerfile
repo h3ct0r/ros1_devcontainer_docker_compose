@@ -185,6 +185,9 @@ RUN chmod +x /onCreate.sh
 COPY .devcontainer/postCreate.sh /postCreate.sh
 RUN chmod +x /postCreate.sh
 
+COPY .devcontainer/postAttach.sh /postAttach.sh
+RUN chmod +x /postAttach.sh
+
 # prepare VNC
 RUN mkdir -p "/home/ubuntu/.vnc"
 RUN echo "$PASSWD" | vncpasswd -f > "/home/ubuntu/.vnc/passwd"
@@ -210,6 +213,7 @@ RUN echo "blacklist ipv6" >> /etc/modprobe.d/blacklist.conf && \
 
 # install code plugins and rosdep dependencies using the default user
 USER $USERNAME
+RUN touch /home/ubuntu/.Xauthority
 
 # TODO: add the git clone command of your repo here
 
@@ -217,6 +221,9 @@ USER $USERNAME
 # RUN code --install-extension ms-python.python && \
 #     code --install-extension ms-vscode.cpptools-extension-pack && \
 #     code --install-extension redhat.vscode-xml
+
+RUN mkdir -p /home/ubuntu/ros_ws/src
+RUN chown -R ubuntu:ubuntu /home/ubuntu/
 
 RUN rosdep update
     
