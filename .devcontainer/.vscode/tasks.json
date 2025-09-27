@@ -9,13 +9,29 @@
             "problemMatcher": [],
             "presentation": {
                 "echo": false,  // silence "Executing task ..."
-                "focus": true,
+                "focus": false,
                 "reveal": "always",
-                "panel": "new"
+                "panel": "new",
+                "group": "initial_opened_browser"
             },
             "runOptions": {
                 "runOn": "folderOpen"
             }
+        },
+        {
+            "label": "openInitialReadmeFile",
+            "command": "${input:openReadmeFile}",
+            "problemMatcher": [],
+            "presentation": {
+                "echo": false,  // silence "Executing task ..."
+                "focus": true,
+                "reveal": "always",
+                "panel": "new",
+                "group": "initial_opened_file"
+            },
+            // "runOptions": {
+            //     "runOn": "folderOpen"
+            // }
         },
         {
             "type": "process",
@@ -73,6 +89,14 @@
         }
     ],
     "inputs": [
+        {
+            "id": "openReadmeFile",
+            "type": "command",
+            "command": "workbench.action.terminal.sendSequence",
+            "args": {
+                "text": "workbench.action.files.openFile local_mount/MOUNT_README.md\u000D"
+            }
+        },
         {
             "id": "packageName",
             "type": "promptString",

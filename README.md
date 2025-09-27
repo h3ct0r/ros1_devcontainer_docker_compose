@@ -16,7 +16,6 @@ This container has already out of the box:
   - Automatically open the VNC interface in a ROS tab
   - Custom .vscode tasks to deploy roscore/rviz
 
-
 <figure>
   <img src="https://github.com/user-attachments/assets/a5fbef81-d655-4552-91bd-7c9ee71c04e9" alt="Fully loaded interface with the VNC client and multiple terminals on the bottom panel" style="width:100%">
   <figcaption>Fully loaded interface with the VNC client and multiple terminals on the bottom panel.</figcaption>

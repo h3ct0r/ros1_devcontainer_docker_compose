@@ -10,11 +10,6 @@
     "waitFor": "postCreateCommand",
     "workspaceFolder": "/home/ubuntu",
     "customizations": {
-        "codespaces": {
-            "openFiles": [
-                "ros_ws/MOUNT_README.md"
-            ]
-        },
         "vscode": {
             "extensions":[
                 "donjayamanne.python-extension-pack",
