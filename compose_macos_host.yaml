@@ -7,15 +7,17 @@ services:
     ipc: host
     pid: host
     privileged: true
-    network_mode: host
+    network_mode: bridge
+    ports:
+      - "3080:3080"
+      - "3081:3000"
+      - "3022:3022"
     environment:
       - DISPLAY=${DISPLAY:-:0}
       - NVIDIA_DRIVER_CAPABILITIES=all
       - TZ=${TZ:-UTC}
       - ROS_LOG_DIR=/var/log/val_logger/noetic_devel
       - ROS_MASTER_URI=http://localhost:11311/
-      - DEBIAN_FRONTEND=noninteractive
-    network_mode: host
     volumes:
       - ${localWorkspaceFolder:-./local_mount}:/home/ubuntu/ros_ws
       - /etc/localtime:/etc/localtime:ro
@@ -25,11 +27,3 @@ services:
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
-    runtime: nvidia
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              capabilities: [gpu]
-              count: 1
