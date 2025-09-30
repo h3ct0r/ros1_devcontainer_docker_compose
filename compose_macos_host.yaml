@@ -7,7 +7,11 @@ services:
     ipc: host
     pid: host
     privileged: true
-    network_mode: host
+    network_mode: bridge
+    ports:
+      - "3080:3080"
+      - "3081:3000"
+      - "3022:3022"
     environment:
       - DISPLAY=${DISPLAY:-:0}
       - NVIDIA_DRIVER_CAPABILITIES=all
@@ -23,11 +27,3 @@ services:
     cap_add:
       - NET_ADMIN
       - SYS_MODULE
-    runtime: nvidia
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              capabilities: [gpu]
-              count: 1
