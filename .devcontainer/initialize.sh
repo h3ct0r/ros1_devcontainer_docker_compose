@@ -29,5 +29,5 @@ source $ENV_FILEPATH
 
 # Set localWorkspaceFolder environment variable if not already set
 if [ -z "${localWorkspaceFolder}" ]; then 
-    echo -e "\nlocalWorkspaceFolder=$SCRIPT_DIR/..\n" >> $ENV_FILEPATH
+    echo -e "\nlocalWorkspaceFolder=$SCRIPT_DIR/../\n" >> $ENV_FILEPATH
 fi

@@ -7,6 +7,7 @@ services:
     ipc: host
     pid: host
     privileged: true
+    runtime: nvidia
     environment:
       - DISPLAY=${DISPLAY:-:0}
       - NVIDIA_DRIVER_CAPABILITIES=all
@@ -23,7 +24,7 @@ services:
     # extra_hosts:
     #   - "simulator:127.0.0.1" # fix rviz hostname
     volumes:
-      - ${localWorkspaceFolder}/local_mount:/home/ubuntu/ros_ws
+      - ${localWorkspaceFolder:-./local_mount}:/home/ubuntu/ros_ws
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
       - /tmp/.X11-unix:/tmp/.X11-unix

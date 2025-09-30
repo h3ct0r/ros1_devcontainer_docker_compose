@@ -1,4 +1,9 @@
-FROM osrf/ros:noetic-desktop-full
+ARG TARGETARCH
+
+FROM osrf/ros:noetic-desktop-full AS amd64_build_state
+FROM arm64v8/ros:noetic-perception-focal AS arm64_build_state
+FROM ${TARGETARCH}_build_state AS final_stage
+
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
@@ -97,6 +102,7 @@ RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" 
     wget https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -O - | sudo apt-key add - && \
     apt update && \
     apt install -y python3-catkin-tools \
+    ros-noetic-desktop-full \
     ros-noetic-velodyne \
     ros-noetic-velodyne-description \
     ros-noetic-velodyne-simulator \
@@ -204,6 +210,14 @@ COPY configs/ros_file_templates /home/ubuntu/ros_file_templates
 
 RUN chown -R "$USERNAME:$USERNAME" "/home/ubuntu"
 RUN sed -i "s/password = WebUtil.getConfigVar('password');/password = '$PASSWD'/" /usr/lib/novnc/app/ui.js
+
+# fix shared library for vscode and vnc services
+RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+    wget http://ports.ubuntu.com/pool/main/libf/libffi/libffi8_3.4.2-4_arm64.deb -P /tmp && \
+    dpkg -i /tmp/libffi/libffi8_3.4.2-4_arm64.deb; \
+    fi
+
+RUN echo -e "AAAA --> ${TARGETPLATFORM}"
 
 # prepare logger
 RUN mkdir -p /var/log/val_logger/noetic_devel
