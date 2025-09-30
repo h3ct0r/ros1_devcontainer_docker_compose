@@ -7,8 +7,8 @@ A  `development container` (or dev container for short) allows you to use a cont
 This container has already out of the box:
 - ROS1 noetic with a base workspace `/home/ubuntu/ros_ws/`;
 - VNC server that allows direct browser access (http://localhost:3080/), so nothing is required to install and use it;
-- A `ssh` server, to allow direct access from outside
-- A web `vscode` server for easy remote access when deploying it on the robot
+- A `ssh` server, to allow direct access from outside (`ssh ubuntu@localhost -p 3022`)
+- A web `vscode` server for easy remote access when deploying it on the robot (http://localhost:3081/)
 - Automatic `xcode +` command executed on each attachment for local X forwarding
 - Custom environment and VScode configurations:
   - Open split terminals on launch
