@@ -1,8 +1,11 @@
-ARG TARGETARCH
-
 FROM osrf/ros:noetic-desktop-full AS amd64_build_state
 FROM arm64v8/ros:noetic-perception-focal AS arm64_build_state
 FROM ${TARGETARCH}_build_state AS final_stage
+
+ARG TARGETARCH
+ARG TARGETPLATFORM
+
+LABEL architecture=$TARGETARCH
 
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
@@ -19,6 +22,7 @@ ENV ROS_DISTRO=noetic
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /usr/bin/bash \
     && apt-get update \
+    && apt-get upgrade -y \
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
@@ -26,8 +30,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
 RUN usermod -aG sudo ubuntu
 
 # install graphic interface
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y \
+RUN apt-get install -y \
     xfce4 \
     xfce4-goodies \
     supervisor
@@ -211,13 +214,11 @@ COPY configs/ros_file_templates /home/ubuntu/ros_file_templates
 RUN chown -R "$USERNAME:$USERNAME" "/home/ubuntu"
 RUN sed -i "s/password = WebUtil.getConfigVar('password');/password = '$PASSWD'/" /usr/lib/novnc/app/ui.js
 
-# fix shared library for vscode and vnc services
-RUN if [ "$TARGETPLATFORM" = "linux/arm64" ]; then \
+# fix arm64 shared library for vscode and vnc services
+RUN if [ "$TARGETARCH" == "arm64" ]; then \
     wget http://ports.ubuntu.com/pool/main/libf/libffi/libffi8_3.4.2-4_arm64.deb -P /tmp && \
-    dpkg -i /tmp/libffi/libffi8_3.4.2-4_arm64.deb; \
+    dpkg -i /tmp/libffi8_3.4.2-4_arm64.deb; \
     fi
-
-RUN echo -e "AAAA --> ${TARGETPLATFORM}"
 
 # prepare logger
 RUN mkdir -p /var/log/val_logger/noetic_devel
@@ -232,6 +233,9 @@ RUN echo "blacklist ipv6" >> /etc/modprobe.d/blacklist.conf && \
 
 # install code plugins and rosdep dependencies using the default user
 USER $USERNAME
+
+RUN echo -e "TARGETARCH1: $TARGETARCH" >> /home/ubuntu/test.txt
+
 RUN touch /home/ubuntu/.Xauthority
 
 RUN echo "export PS1='[docker]\[\e[38;5;216m\]\u\[\e[38;5;160m\]@\[\e[38;5;202m\]\h \[\e[38;5;131m\]\w \[\033[0m\]$ '" >> /home/ubuntu/.bashrc
@@ -246,7 +250,7 @@ RUN echo "export PS1='[docker]\[\e[38;5;216m\]\u\[\e[38;5;160m\]@\[\e[38;5;202m\
 RUN mkdir -p /home/ubuntu/ros_ws/src
 RUN chown -R ubuntu:ubuntu /home/ubuntu/
 
-RUN rosdep update
+# RUN rosdep update
     
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "sudo", "-E", "/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

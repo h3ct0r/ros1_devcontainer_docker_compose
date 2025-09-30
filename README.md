@@ -25,6 +25,12 @@ This container has already out of the box:
 
 Open folder with VScode using the dev containers plugin (https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 
+## Build directy with 'docker compose'
+
+```
+BUILDKIT_PROGRESS=plain docker compose -f compose_linux_host.yaml up --build
+```
+
 ## Know issues
 
 - The website preview does open a terminal with a extrange cannot find shell for command XXXX.
