@@ -9,7 +9,7 @@ This container has already out of the box:
 - VNC server that allows direct browser access (http://localhost:3080/), so nothing is required to install and use it;
 - A `ssh` server, to allow direct access from outside
 - A web `vscode` server for easy remote access when deploying it on the robot
-- Automatic `xcode +local` command executed on each attachment for local X forwarding
+- Automatic `xcode +` command executed on each attachment for local X forwarding
 - Custom environment and VScode configurations:
   - Open split terminals on launch
   - Setup all environments variables automatically for running ROS
