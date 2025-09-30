@@ -143,7 +143,8 @@ RUN apt-get update && apt-get upgrade -y && \
     net-tools \
     imagemagick \
     python-dev \
-    libsecret-1-dev
+    libsecret-1-dev \
+    firefox
 
 # colorize less
 RUN lesspipe >> ~/.bashrc && \
@@ -204,6 +205,10 @@ COPY configs/ros_file_templates /home/ubuntu/ros_file_templates
 RUN chown -R "$USERNAME:$USERNAME" "/home/ubuntu"
 RUN sed -i "s/password = WebUtil.getConfigVar('password');/password = '$PASSWD'/" /usr/lib/novnc/app/ui.js
 
+# prepare logger
+RUN mkdir -p /var/log/val_logger/noetic_devel
+RUN chown -R ubuntu: /var/log/val_logger/
+
 # Disable IPv6 within the container
 RUN echo "blacklist ipv6" >> /etc/modprobe.d/blacklist.conf && \
     echo "net.ipv6.conf.all.disable_ipv6 = 1" >> /etc/sysctl.conf && \
@@ -214,6 +219,8 @@ RUN echo "blacklist ipv6" >> /etc/modprobe.d/blacklist.conf && \
 # install code plugins and rosdep dependencies using the default user
 USER $USERNAME
 RUN touch /home/ubuntu/.Xauthority
+
+RUN echo "export PS1='[docker]\[\e[38;5;216m\]\u\[\e[38;5;160m\]@\[\e[38;5;202m\]\h \[\e[38;5;131m\]\w \[\033[0m\]$ '" >> /home/ubuntu/.bashrc
 
 # TODO: add the git clone command of your repo here
 

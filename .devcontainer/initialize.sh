@@ -6,8 +6,8 @@
 # --------------------------------------------------------------------- #
 
 # The `|| true` command allows to ignore any errors (MacOS does not have native X server, for example)
-xhost +local || true
-echo "[initializeCommand] xhost +local"
+xhost + || true
+echo "[initializeCommand] xhost +"
 
 # Create automatic environment variables such as `localWorkspaceFolder` 
 # used for the docker compose mount configuration

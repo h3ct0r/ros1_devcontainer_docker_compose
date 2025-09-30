@@ -8,35 +8,57 @@ services:
     pid: host
     privileged: true
     environment:
-      - DISPLAY=$DISPLAY
+      - DISPLAY=${DISPLAY:-:0}
       - NVIDIA_DRIVER_CAPABILITIES=all
-      - ROS_MASTER_URI=http://simulator:11311/
-    ports:
-      - "3022:22" # sshd
-      - "3080:80" # novnc
-      - "3081:3000" # vscode-server
-    extra_hosts:
-      - "simulator:127.0.0.1" # fix rviz hostname
+      - TZ=${TZ:-UTC}
+      - ROS_LOG_DIR=/var/log/val_logger/noetic_devel
+      - ROS_MASTER_URI=http://localhost:11311/
+    network_mode: host
+    # ports:
+    #   - "3022:22" # sshd
+    #   - "3080:80" # novnc
+    #   - "3081:3000" # vscode-server
+    #   - "11311:11311" # ros
+
+    # extra_hosts:
+    #   - "simulator:127.0.0.1" # fix rviz hostname
     volumes:
       - ${localWorkspaceFolder}/local_mount:/home/ubuntu/ros_ws
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
-      # - /tmp/.X11-unix:/tmp/.X11-unix
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /var/log/val_logger:/var/log/val_logger
       # - ${HOME}/.Xauthority:/home/ubuntu/.Xauthority
-    # linux configuration
-    # mac_address: 51:91:f3:26:c8:36      # <-- MAC needs to be unique in this network (gerated randomly)
+    # linux network configuration
+    #mac_address: EE:9E:AB:F9:31:AF          # <-- MAC needs to be unique in this network (gerated randomly)
     # networks:
-    #   macvlan_ros1:                        # <-- MACVlan Name no need to change, but it needs to be unique
-    #     ipv4_address: 192.168.1.111       # <-- Update; must be the IP that you want to use as for the container
+    #   macvlan_ros1_network:                         # <-- MACVlan Name no need to change, but it needs to be unique
+    #     ipv4_address: 150.164.212.235       # <-- Update; must be the IP that you want to use as for the container
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    # sysctls:
+    #   - net.ipv4.ip_forward=1
+    #   - net.ipv4.conf.all.src_valid_mark=1
+    #   - net.ipv6.conf.all.disable_ipv6=0
+    #   - net.ipv6.conf.all.forwarding=1
+    #   - net.ipv6.conf.default.forwarding=1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
+              count: 1
 
 # networks:
-#   ros_network:
-#     driver: macvlan
-#     ipv6: false
+#   macvlan_ros1_network:
+#     driver: ipvlan                            # using macvlan is faster but prevents the host from connecting to it direcly
 #     driver_opts:
-#       parent: eth0                           # <- Update to match your NIC
+#       ipvlan_mode: l3
+#       parent: enxa0cec8831e24                          # <- Update to match your NIC
 #     ipam:
 #       config:
-#         - subnet: 192.168.1.0/24            # <-- Update
-#           gateway: 192.168.1.1              # <-- Update
-#           ip_range: 192.168.1.0/24          # <-- Update
+#         - subnet: 150.164.212.0/24            # <-- Update
+#           gateway: 150.164.212.1              # <-- Update
+#           ip_range: 150.164.212.0/24          # <-- Update
