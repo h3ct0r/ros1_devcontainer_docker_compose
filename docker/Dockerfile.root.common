@@ -168,7 +168,7 @@ COPY configs/supervisord/code_server.conf /etc/supervisor/conf.d/code_server.con
 
 COPY configs/xfce4_defaults /usr/share/xfwm4/defaults
 
-COPY entrypoint.sh /entrypoint.sh
+COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 COPY .devcontainer/onCreate.sh /onCreate.sh
