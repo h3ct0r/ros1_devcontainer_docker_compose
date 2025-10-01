@@ -3,7 +3,7 @@ services:
     container_name: ros1_noetic_devel
     build:
       context: .
-      dockerfile: Dockerfile.amd64
+      dockerfile: docker/Dockerfile.amd64
     ipc: host
     pid: host
     privileged: true
