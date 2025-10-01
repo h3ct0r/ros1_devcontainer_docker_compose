@@ -1,7 +1,7 @@
 # ROS1 Noetic VScode devcontainer with docker-compose for *development*
 ## _A simple way to run ROS1 Noetic for *DEVELOPMENT* using https://containers.dev/_
 
-This repo contains a simple way to delevop locally in a ROS1 Noetic docker container using the VScode `[devcontainers](https://containers.dev/)`. 
+This repo contains a simple way to delevop locally in a ROS1 Noetic docker container using the VScode [devcontainers](https://containers.dev/). 
 A  `development container` (or dev container for short) allows you to use a container as a full-featured development environment. It can be used to run an application, to separate tools, libraries, or runtimes needed for working with a codebase, and to aid in continuous integration and testing.
 
 <details>
@@ -49,9 +49,9 @@ BUILDKIT_PROGRESS=plain docker compose -f compose_macos_host.yaml up --build
 - SSH: `ssh ubuntu@localhost -p 3022`
   - user: `ubuntu`
   - pass: `ubuntu`
-
+ 
 <figure>
-  <img src="https://github.com/user-attachments/assets/6c085018-0b43-4f0e-9316-20bac5d0d4c1" alt="Fully loaded interface with the VNC client and multiple terminals on the bottom panel" style="width:50%">
+  <img src="https://github.com/user-attachments/assets/6c085018-0b43-4f0e-9316-20bac5d0d4c1" alt="Fully loaded interface with the VNC client and multiple terminals on the bottom panel" style="width:70%">
   <figcaption>Fully loaded interface with the VNC client and multiple terminals on the bottom panel.</figcaption>
 </figure>
 
