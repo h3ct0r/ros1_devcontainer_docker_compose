@@ -29,7 +29,7 @@ jobs:
         run: sleep 120 
 
       - name: Test noVNC is up
-         run: |
+        run: |
           SERVICE_URL="http://localhost:3080"
           EXPECTED_RESPONSE="200"
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" $SERVICE_URL)
@@ -46,7 +46,7 @@ jobs:
           fi
 
       - name: Test code-server is up
-         run: |
+        run: |
           SERVICE_URL="http://localhost:3081"
           EXPECTED_RESPONSE="200"
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" $SERVICE_URL)
@@ -61,8 +61,9 @@ jobs:
               echo "Actual: $RESPONSE"
               exit 1
           fi
-    - name: Test sshd is up
-         run: |
+          
+      - name: Test sshd is up
+        run: |
           EXPECTED_RESPONSE="1"
           RESPONSE=$(netstat -an | grep 0.0.0.0:3022 | grep tcp | grep LISTEN | wc -l)
           if [ "$RESPONSE" == "$EXPECTED_RESPONSE" ]; then
