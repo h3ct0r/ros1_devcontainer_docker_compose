@@ -17,6 +17,7 @@ A  `development container` (or dev container for short) allows you to use a cont
   - Setup all environments variables automatically for running ROS
   - Automatically open the VNC interface in a ROS tab
   - Custom .vscode tasks to deploy roscore/rviz
+  - Custom PS1 (terminal shell)
 </details>
 
 ## Quick usage
@@ -28,7 +29,7 @@ A  `development container` (or dev container for short) allows you to use a cont
   - pass: `ubuntu`
 
 <figure>
-  <img src="https://github.com/user-attachments/assets/a5fbef81-d655-4552-91bd-7c9ee71c04e9" alt="Fully loaded interface with the VNC client and multiple terminals on the bottom panel" style="width:100%">
+  <img src="https://github.com/user-attachments/assets/6c085018-0b43-4f0e-9316-20bac5d0d4c1" alt="Fully loaded interface with the VNC client and multiple terminals on the bottom panel" style="width:100%">
   <figcaption>Fully loaded interface with the VNC client and multiple terminals on the bottom panel.</figcaption>
 </figure>
 
