@@ -1,0 +1,84 @@
+name: CI/CD with Docker Compose Linux Host
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Install Docker Compose
+        uses: docker/setup-buildx-action@v3 # This action also sets up Compose
+        with:
+          install-compose: true
+
+      - name: Build and start Docker Compose services
+        run: docker compose -f compose_linux_host.yaml up --build
+
+      - name: Wait for services to be healthy (optional, but recommended)
+        # You can use a dedicated action or a script to wait for health checks
+        # Example using a simple sleep (adjust as needed for your application)
+        run: sleep 120 
+
+      - name: Test noVNC is up
+         run: |
+          SERVICE_URL="http://localhost:3080"
+          EXPECTED_RESPONSE="200"
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" $SERVICE_URL)
+          if [ "$RESPONSE" == "$EXPECTED_RESPONSE" ]; then
+              echo "Test Passed: Service returned expected response."
+              echo "Expected: $EXPECTED_RESPONSE"
+              echo "Actual: $RESPONSE"
+              exit 0
+          else
+              echo "Test Failed: Service response did not match expected response."
+              echo "Expected: $EXPECTED_RESPONSE"
+              echo "Actual: $RESPONSE"
+              exit 1
+          fi
+
+      - name: Test code-server is up
+         run: |
+          SERVICE_URL="http://localhost:3081"
+          EXPECTED_RESPONSE="200"
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" $SERVICE_URL)
+          if [ "$RESPONSE" == "$EXPECTED_RESPONSE" ]; then
+              echo "Test Passed: Service returned expected response."
+              echo "Expected: $EXPECTED_RESPONSE"
+              echo "Actual: $RESPONSE"
+              exit 0
+          else
+              echo "Test Failed: Service response did not match expected response."
+              echo "Expected: $EXPECTED_RESPONSE"
+              echo "Actual: $RESPONSE"
+              exit 1
+          fi
+    - name: Test sshd is up
+         run: |
+          EXPECTED_RESPONSE="1"
+          RESPONSE=$(netstat -an | grep 0.0.0.0:3022 | grep tcp | grep LISTEN | wc -l)
+          if [ "$RESPONSE" == "$EXPECTED_RESPONSE" ]; then
+              echo "Test Passed: Service returned expected response."
+              echo "Expected: $EXPECTED_RESPONSE"
+              echo "Actual: $RESPONSE"
+              exit 0
+          else
+              echo "Test Failed: Service response did not match expected response."
+              echo "Expected: $EXPECTED_RESPONSE"
+              echo "Actual: $RESPONSE"
+              exit 1
+          fi
+
+      - name: Check running containers (optional for debugging)
+        run: docker ps -a
+
+      - name: Stop and remove containers
+        run: docker compose -f compose_linux_host.yaml down

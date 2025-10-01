@@ -2,7 +2,7 @@
 
 FROM arm64v8/ros:noetic-perception-focal AS arm64_build_state
 
-INCLUDE+ Dockerfile.root.common
+INCLUDE+ docker/Dockerfile.root.common
 
 # vscode server
 RUN  curl -fOL https://github.com/coder/code-server/releases/download/v4.104.2/code-server_4.104.2_arm64.deb && \
@@ -13,4 +13,5 @@ RUN  curl -fOL https://github.com/coder/code-server/releases/download/v4.104.2/c
 RUN wget http://ports.ubuntu.com/pool/main/libf/libffi/libffi8_3.4.2-4_arm64.deb -P /tmp && \
     dpkg -i /tmp/libffi8_3.4.2-4_arm64.deb;
 
-INCLUDE+ Dockerfile.user.common
+INCLUDE+ docker/Dockerfile.user.common
+INCLUDE+ docker/Dockerfile.entrypoint.common
