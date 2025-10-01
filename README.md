@@ -27,9 +27,17 @@ Open folder with VScode using the dev containers plugin (https://marketplace.vis
 
 ## Build directy with 'docker compose'
 
+When the host is a linux-based machine:
 ```
 BUILDKIT_PROGRESS=plain docker compose -f compose_linux_host.yaml up --build
 ```
+
+When the host is a macos-based machine:
+```
+BUILDKIT_PROGRESS=plain docker compose -f compose_macos_host.yaml up --build
+```
+
+`BUILDKIT_PROGRESS=plain` helps to visualize step by step output of each of the commands.
 
 ## Know issues
 

@@ -5,7 +5,7 @@
     "remoteUser": "ubuntu",
     "service": "ros1",
     "dockerComposeFile": [
-        "../compose_linux_host.yaml"
+        "../compose_macos_host.yaml"
     ],
     "waitFor": "postCreateCommand",
     "workspaceFolder": "/home/ubuntu",

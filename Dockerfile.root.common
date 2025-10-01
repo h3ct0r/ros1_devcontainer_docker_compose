@@ -1,12 +1,3 @@
-FROM osrf/ros:noetic-desktop-full AS amd64_build_state
-FROM arm64v8/ros:noetic-perception-focal AS arm64_build_state
-FROM ${TARGETARCH}_build_state AS final_stage
-
-ARG TARGETARCH
-ARG TARGETPLATFORM
-
-LABEL architecture=$TARGETARCH
-
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 
@@ -134,19 +125,11 @@ RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" 
     python3-argcomplete \
     python3-rosdep python3-vcstool
 
-# vscode
-RUN curl -sSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg && \
-    install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg && \
-    sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list' && \
-    rm -f packages.microsoft.gpg
-
 # install depending packages
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y bash-completion \
+RUN apt-get install -y bash-completion \
     less \
     wget \
     language-pack-en \
-    code \
     vim-tiny \
     iputils-ping \
     net-tools \
@@ -162,9 +145,8 @@ RUN lesspipe >> ~/.bashrc && \
     curl -sSL https://raw.githubusercontent.com/CoeJoder/lessfilter-pygmentize/master/.lessfilter > ~/.lessfilter && \
     chmod 755 ~/.lessfilter
 
-# global vscode config
+# prepare vscode and home
 ADD .devcontainer/.vscode /home/ubuntu/.vscode
-RUN ln -s /home/ubuntu/.vscode /home/ubuntu/.vscode-server
 RUN sudo chown -R ubuntu:ubuntu /home/ubuntu
 
 # Source ROS environment automatically
@@ -214,12 +196,6 @@ COPY configs/ros_file_templates /home/ubuntu/ros_file_templates
 RUN chown -R "$USERNAME:$USERNAME" "/home/ubuntu"
 RUN sed -i "s/password = WebUtil.getConfigVar('password');/password = '$PASSWD'/" /usr/lib/novnc/app/ui.js
 
-# fix arm64 shared library for vscode and vnc services
-RUN if [ "$TARGETARCH" == "arm64" ]; then \
-    wget http://ports.ubuntu.com/pool/main/libf/libffi/libffi8_3.4.2-4_arm64.deb -P /tmp && \
-    dpkg -i /tmp/libffi8_3.4.2-4_arm64.deb; \
-    fi
-
 # prepare logger
 RUN mkdir -p /var/log/val_logger/noetic_devel
 RUN chown -R ubuntu: /var/log/val_logger/
@@ -230,27 +206,3 @@ RUN echo "blacklist ipv6" >> /etc/modprobe.d/blacklist.conf && \
     echo "net.ipv6.conf.default.disable_ipv6 = 1" >> /etc/sysctl.conf && \
     echo "net.ipv6.conf.lo.disable_ipv6 = 1" >> /etc/sysctl.conf && \
     sysctl -p
-
-# install code plugins and rosdep dependencies using the default user
-USER $USERNAME
-
-RUN echo -e "TARGETARCH1: $TARGETARCH" >> /home/ubuntu/test.txt
-
-RUN touch /home/ubuntu/.Xauthority
-
-RUN echo "export PS1='[docker]\[\e[38;5;216m\]\u\[\e[38;5;160m\]@\[\e[38;5;202m\]\h \[\e[38;5;131m\]\w \[\033[0m\]$ '" >> /home/ubuntu/.bashrc
-
-# TODO: add the git clone command of your repo here
-
-# disable temporarily due to the lack of cache in this command
-# RUN code --install-extension ms-python.python && \
-#     code --install-extension ms-vscode.cpptools-extension-pack && \
-#     code --install-extension redhat.vscode-xml
-
-RUN mkdir -p /home/ubuntu/ros_ws/src
-RUN chown -R ubuntu:ubuntu /home/ubuntu/
-
-# RUN rosdep update
-    
-ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "sudo", "-E", "/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
