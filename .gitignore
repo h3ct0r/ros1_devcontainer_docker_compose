@@ -7,6 +7,5 @@ local_mount/*
 /build_release/
 /devel_release/
 /logs_release/
-/local_mount/
 .env
 .DS_Store
