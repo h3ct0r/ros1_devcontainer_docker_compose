@@ -1,5 +1,3 @@
-local_mount/*
-!local_mount/local_mount_ok
 /.catkin_tools/
 /build_debug/
 /devel_debug/
