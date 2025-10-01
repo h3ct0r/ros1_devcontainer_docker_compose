@@ -49,12 +49,13 @@ BUILDKIT_PROGRESS=plain docker compose -f compose_macos_host.yaml up --build
 - SSH: `ssh ubuntu@localhost -p 3022`
   - user: `ubuntu`
   - pass: `ubuntu`
- 
-<figure>
-  <img src="https://github.com/user-attachments/assets/6c085018-0b43-4f0e-9316-20bac5d0d4c1" alt="Fully loaded interface with the VNC client and multiple terminals on the bottom panel" style="width:70%">
-  <figcaption>Fully loaded interface with the VNC client and multiple terminals on the bottom panel.</figcaption>
-</figure>
 
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/6c085018-0b43-4f0e-9316-20bac5d0d4c1" alt="Fully loaded interface with the VNC client and multiple terminals on the bottom panel" style="text-align:center; width:70%">
+  <br>
+ Fully loaded interface with the VNC client and multiple terminals on the bottom panel.
+</div>
+ 
 ## Know issues
 
 - The live preview opens a terminal with a message "cannot find shell for command XXXX". This can be safely ignored.
