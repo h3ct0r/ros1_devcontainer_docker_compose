@@ -22,39 +22,59 @@ A  `development container` (or dev container for short) allows you to use a cont
   - Custom PS1 (terminal shell);
 </details>
 
-## Devcontainers installation
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/6c085018-0b43-4f0e-9316-20bac5d0d4c1" alt="Fully loaded interface with the VNC client and multiple terminals on the bottom panel" style="text-align:center; width:70%">
+  <br>
+ Fully loaded interface with the VNC client and multiple terminals on the bottom panel.
+</div>
 
+## How to use?
+
+### To develop locally, using `devcontainers` (local VScode)
+
+<details>
+<summary> Recommended for local development, with X11 sharing, etc.</summary>
+
+- `git clone git@github.com:verlab/ros1_devcontainer_docker_compose.git`
+- Verify the compose file used in the container used in `.devcontainer/devcontaoiner.json`, given your operative system:
+  ```json
+  "dockerComposeFile": [
+        "../compose_linux_host.yaml" # or can be also "../compose_macos_host.yaml" if you use MacOS
+    ],
+  ```
 - Open folder with VScode using the dev containers plugin (https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+  - `control + shift + p`
+  - Write `Dev Containers: Reopen in Container` or  `Dev Containers: Rebuild and Reopen in Container`
 
-## Quick usage
+<div align="center">
+  <img src="https://github.com/user-attachments/assets/784b06f7-8225-4be8-a2b7-e6e96b8cc376" alt="Fully loaded interface with the VNC client and multiple terminals on the bottom panel" style="text-align:center; width:70%">
+  <br>
+ How to open the repo using the Dev Containers plugin in VScode.
+</div>
+</details>
 
-### Start devcontainer on VScode or use `docker compose`
 
-- When the host is a linux-based machine:
-```
-BUILDKIT_PROGRESS=plain docker compose -f compose_linux_host.yaml up --build
-```
+### Headless run with `docker compose` (remote Jetson headless)
 
-- When the host is a macos-based machine:
-```
-BUILDKIT_PROGRESS=plain docker compose -f compose_macos_host.yaml up --build
-```
+<details>
+  <summary>Recommended for remote development, as for example, deploying a dev machine on the robot.</summary>
+  
+- `git clone git@github.com:verlab/ros1_devcontainer_docker_compose.git`
+- `cd ros1_devcontainer_docker_compose`
+- `BUILDKIT_PROGRESS=plain docker compose -f compose_jetson_host.yaml up --build`
 
 `BUILDKIT_PROGRESS=plain` helps to visualize step by step output of each of the commands.
+</details>
 
-### Usage
+### Access to services
+
+Once the container is up, the you can access the services via:
 
 - VNC: http://localhost:3080
 - VScode: http://localhost:3081
 - SSH: `ssh ubuntu@localhost -p 3022`
   - user: `ubuntu`
   - pass: `ubuntu`
-
-<div align="center">
-  <img src="https://github.com/user-attachments/assets/6c085018-0b43-4f0e-9316-20bac5d0d4c1" alt="Fully loaded interface with the VNC client and multiple terminals on the bottom panel" style="text-align:center; width:70%">
-  <br>
- Fully loaded interface with the VNC client and multiple terminals on the bottom panel.
-</div>
  
 ## Know issues
 
