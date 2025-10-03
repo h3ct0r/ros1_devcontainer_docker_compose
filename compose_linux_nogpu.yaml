@@ -1,0 +1,25 @@
+services:
+  ros1:
+    container_name: ros1_noetic_devel
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.amd64
+    ipc: host
+    pid: host
+    privileged: true
+    network_mode: host
+    environment:
+      - DISPLAY=${DISPLAY:-:0}
+      - TZ=${TZ:-UTC}
+      - ROS_LOG_DIR=/var/log/val_logger/noetic_devel
+      - ROS_MASTER_URI=http://localhost:11311/
+      - DEBIAN_FRONTEND=noninteractive
+    volumes:
+      - ${localWorkspaceFolder:-./}local_mount/:/home/ubuntu/ros_ws
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /var/log/val_logger:/var/log/val_logger
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
