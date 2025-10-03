@@ -39,9 +39,10 @@ A  `development container` (or dev container for short) allows you to use a cont
 - Verify the compose file used in the container used in `.devcontainer/devcontaoiner.json`, given your operative system:
   ```json
   "dockerComposeFile": [
-        "../compose_linux_host.yaml" # or can be also "../compose_macos_host.yaml" if you use MacOS
+        "../compose_linux_host.yaml"
     ],
   ```
+  - Can also be `../compose_macos_host.yaml` if you use MacOS
 - Open folder with VScode using the dev containers plugin (https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
   - `control + shift + p`
   - Write `Dev Containers: Reopen in Container` or  `Dev Containers: Rebuild and Reopen in Container`
