@@ -78,4 +78,4 @@ jobs:
         run: docker ps -a
 
       - name: Stop and remove containers
-        run: docker compose -f compose_linux_host.yaml down
+        run: docker compose -f compose_linux_nogpu.yaml down
